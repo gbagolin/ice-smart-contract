@@ -87,7 +87,7 @@ contract ICESmartContract {
     function addCompany(string memory name) public returns (uint256 companyId) {
         companies.push(Company(companyIdCounter, name));
         companyIdCounter += 1;
-        return companyIdCounter;
+        return companyIdCounter - 1;
     }
 
     function addMachine(
@@ -97,7 +97,7 @@ contract ICESmartContract {
     ) public returns (uint256 machineId) {
         machines.push(Machine(machineIdCounter, name, description, companyId));
         machineIdCounter += 1;
-        return machineIdCounter;
+        return machineIdCounter - 1;
     }
 
     function addRecipe(
@@ -107,7 +107,7 @@ contract ICESmartContract {
     ) public returns (uint256 recipeId) {
         recipes.push(Recipe(recipeIdCounter, name, description, companyId));
         recipeIdCounter += 1;
-        return recipeIdCounter;
+        return recipeIdCounter - 1;
     }
 
     function addRecipeStep(
@@ -126,7 +126,7 @@ contract ICESmartContract {
             )
         );
         recipeStepIdCounter += 1;
-        return recipeStepIdCounter;
+        return recipeStepIdCounter - 1;
     }
 
     function addMeasureConstraint(
@@ -149,7 +149,7 @@ contract ICESmartContract {
             )
         );
         measureConstraintIdCounter += 1;
-        return measureConstraintIdCounter;
+        return measureConstraintIdCounter - 1;
     }
 
     function addProduct(
@@ -162,7 +162,7 @@ contract ICESmartContract {
             Product(productIdCounter, name, description, companyId, recipyId)
         );
         productIdCounter += 1;
-        return productIdCounter;
+        return productIdCounter - 1;
     }
 
     function addPhase(
@@ -183,7 +183,7 @@ contract ICESmartContract {
             )
         );
         phaseIdCounter += 1;
-        return phaseIdCounter;
+        return phaseIdCounter - 1;
     }
 
     function addMeasure(
@@ -206,7 +206,43 @@ contract ICESmartContract {
             )
         );
         measureIdCounter += 1;
-        return measureIdCounter;
+        return measureIdCounter - 1;
+    }
+
+    function getNumOfProductsByCompanyId(uint256 companyId)
+        private
+        view
+        returns (uint256 numOfProducts)
+    {
+        uint256 productCounter = 0;
+        for (
+            uint256 productIndex = 0;
+            productIndex < products.length;
+            productIndex++
+        ) {
+            if (products[productIndex].companyId == companyId) {
+                productCounter += 1;
+            }
+        }
+        return productCounter;
+    }
+
+    function getNumOfProductsByRecipeId(uint256 recipeId)
+        private
+        view
+        returns (uint256 numOfProducts)
+    {
+        uint256 productCounter = 0;
+        for (
+            uint256 productIndex = 0;
+            productIndex < products.length;
+            productIndex++
+        ) {
+            if (products[productIndex].recipeId == recipeId) {
+                productCounter += 1;
+            }
+        }
+        return productCounter;
     }
 
     function getProductsByCompanyId(uint256 companyId)
@@ -214,7 +250,8 @@ contract ICESmartContract {
         view
         returns (Product[] memory)
     {
-        Product[] memory productTemp = new Product[](2);
+        uint256 numOfProducts = getNumOfProductsByCompanyId(companyId);
+        Product[] memory productTemp = new Product[](numOfProducts);
         uint256 productCounter = 0;
         for (
             uint256 productIndex = 0;
@@ -229,25 +266,125 @@ contract ICESmartContract {
         return productTemp;
     }
 
-    function getProductsByRecipyId(uint256 companyId)
+    function getProductsByRecipyId(uint256 recipeId)
         public
         view
         returns (Product[] memory)
     {
-        Product[] memory productTemp = new Product[](2);
+        uint256 numOfProducts = getNumOfProductsByRecipeId(recipeId);
+        Product[] memory productTemp = new Product[](numOfProducts);
         uint256 productCounter = 0;
         for (
             uint256 productIndex = 0;
             productIndex < products.length;
             productIndex++
         ) {
-            if (products[productIndex].companyId == companyId) {
+            if (products[productIndex].recipeId == recipeId) {
                 productTemp[productCounter] = products[productIndex];
                 productCounter += 1;
             }
         }
         return productTemp;
     }
+
+    function getNumOfMachinesByCompanyId(uint256 companyId)
+        public
+        view
+        returns (uint256 numOfMachines)
+    {
+        uint256 machineCounter = 0;
+
+        for (
+            uint256 machineIndex = 0;
+            machineIndex < machines.length;
+            machineIndex++
+        ) {
+            if (machines[machineIndex].companyId == companyId) {
+                machineCounter += 1;
+            }
+        }
+        return machineCounter;
+    }
+
+    function getMachineByCompanyId(uint256 companyId)
+        public
+        view
+        returns (Machine[] memory)
+    {
+        uint256 numOfMachine = getNumOfProductsByRecipeId(companyId);
+        Machine[] memory machineTemp = new Machine[](numOfMachine);
+        uint256 machineCounter = 0;
+        for (
+            uint256 machineIndex = 0;
+            machineIndex < machines.length;
+            machineIndex++
+        ) {
+            if (machines[machineIndex].companyId == companyId) {
+                machineTemp[machineCounter] = machines[machineIndex];
+                machineCounter += 1;
+            }
+        }
+        return machineTemp;
+    }
+
+    function getNumOfRecipesByCompanyId(uint256 companyId)
+        public
+        view
+        returns (uint256 numOfRecepes)
+    {
+        uint256 counter = 0;
+
+        for (
+            uint256 recipesIndex = 0;
+            recipesIndex < machines.length;
+            recipesIndex++
+        ) {
+            if (recipes[recipesIndex].companyId == companyId) {
+                counter += 1;
+            }
+        }
+        return counter;
+    }
+
+    function getRecipesByCompanyId(uint256 companyId)
+        public
+        view
+        returns (Recipe[] memory)
+    {
+        uint256 numOfRecepies = getNumOfRecipesByCompanyId(companyId);
+        Recipe[] memory recipeTemp = new Recipe[](numOfRecepies);
+        uint256 recepieCounter = 0;
+        for (
+            uint256 recepieIndex = 0;
+            recepieIndex < machines.length;
+            recepieIndex++
+        ) {
+            if (recipes[recepieIndex].companyId == companyId) {
+                recipeTemp[recepieCounter] = recipes[recepieIndex];
+                recepieCounter += 1;
+            }
+        }
+        return recipeTemp;
+    }
+
+    // function getNumOfRecipeStepsByRecipeId(uint256 recipeId)
+    //     public
+    //     view
+    //     returns (uint256 numOfRecepes)
+    // {
+    //     uint256 counter = 0;
+
+    //     for (
+    //         uint256 recipesIndex = 0;
+    //         recipesIndex < machines.length;
+    //         recipesIndex++
+    //     ) {
+    //         if (recipes[recipesIndex].companyId == companyId) {
+    //             counter += 1;
+    //         }
+    //     }
+    //     return counter;
+    // }
 
     function getCompanies() private view returns (Company[] memory) {
         return companies;
