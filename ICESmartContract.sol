@@ -66,14 +66,14 @@ contract ICESmartContract {
         uint256 measureConstraintId;
     }
 
-    Company[] private companies;
-    Machine[] private machines;
-    Recipe[] private recipes;
-    Product[] private products;
-    RecipeStep[] private recipeSteps;
-    MeasureConstraint[] private measureConstraints;
-    Phase[] private phases;
-    Measure[] private measures;
+    Company[] public companies;
+    Machine[] public machines;
+    Recipe[] public recipes;
+    Product[] public products;
+    RecipeStep[] public recipeSteps;
+    MeasureConstraint[] public measureConstraints;
+    Phase[] public phases;
+    Measure[] public measures;
 
     uint256 private companyIdCounter;
     uint256 private machineIdCounter;
