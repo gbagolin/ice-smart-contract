@@ -190,6 +190,14 @@ contract ICESmartContract {
         return measureIdCounter - 1;
     }
 
+    function getCompanyById(uint256 companyId) public view returns (Company memory company) {
+        for (uint256 companyIndex; companyIndex < companies.length; companyIndex++) {
+            if (companies[companyIndex].id == companyId) {
+                return companies[companyIndex];
+            }
+        }
+    }
+
     function getNumOfProductsByCompanyId(uint256 companyId)
         private
         view
@@ -547,8 +555,6 @@ contract ICESmartContract {
         }
         return measureTemp;
     }
-
-    
 
     function getCompanies() private view returns (Company[] memory) {
         return companies;
