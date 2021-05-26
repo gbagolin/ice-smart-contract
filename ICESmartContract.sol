@@ -198,6 +198,23 @@ contract ICESmartContract {
         }
     }
 
+    function getRecipes(uint256 recipeId) public view returns (Recipe memory recipe) {
+        for (uint256 recipeIndex; recipeIndex < recipes.length; recipeIndex++) {
+            if (recipes[recipeIndex].id == recipeId) {
+                return recipes[recipeIndex];
+            }
+        }
+    }
+
+
+    function getMachinesById(uint256 machineId) public view returns (Machine memory machine) {
+        for (uint256 machineIndex; machineIndex < machines.length; machineIndex++) {
+            if (machines[machineIndex].id == machineId) {
+                return machines[machineIndex];
+            }
+        }
+    }
+
     function getNumOfProductsByCompanyId(uint256 companyId)
         private
         view
