@@ -66,6 +66,16 @@ contract ICESmartContract {
         uint256 measureConstraintId;
     }
 
+    // struct ProductInformation {
+    //     Product product;
+    //     Company company;
+    //     Phase[] phases;
+    //     Machine[] machinesUsed;
+    //     Recipe recipeUsed;
+    //     RecipeStep[] recipeSteps;
+    //     Measure[] allMeasures;
+    // }
+
     Company[] public companies;
     Machine[] public machines;
     Recipe[] public recipes;
@@ -198,7 +208,7 @@ contract ICESmartContract {
         }
     }
 
-    function getRecipes(uint256 recipeId) public view returns (Recipe memory recipe) {
+    function getRecipesbyId(uint256 recipeId) public view returns (Recipe memory recipe) {
         for (uint256 recipeIndex; recipeIndex < recipes.length; recipeIndex++) {
             if (recipes[recipeIndex].id == recipeId) {
                 return recipes[recipeIndex];
@@ -206,8 +216,59 @@ contract ICESmartContract {
         }
     }
 
+    function getRecipeStepbyId(uint256 recipeStepId)
+        public
+        view
+        returns (RecipeStep memory recipeStep)
+    {
+        for (uint256 recipeStepIndex; recipeStepIndex < recipeSteps.length; recipeStepIndex++) {
+            if (recipeSteps[recipeStepIndex].id == recipeStepId) {
+                return recipeSteps[recipeStepIndex];
+            }
+        }
+    }
 
-    function getMachinesById(uint256 machineId) public view returns (Machine memory machine) {
+    function getMeasureConstraintById(uint256 measureConstraintId)
+        public
+        view
+        returns (MeasureConstraint memory measureConstraint)
+    {
+        for (
+            uint256 measureConstraintIndex;
+            measureConstraintIndex < measureConstraints.length;
+            measureConstraintIndex++
+        ) {
+            if (measureConstraints[measureConstraintIndex].id == measureConstraintId) {
+                return measureConstraints[measureConstraintIndex];
+            }
+        }
+    }
+
+    function getProductById(uint256 productId) public view returns (Product memory product) {
+        for (uint256 productIndex; productIndex < products.length; productIndex++) {
+            if (products[productIndex].id == productId) {
+                return products[productIndex];
+            }
+        }
+    }
+
+    function getPhaseById(uint256 phaseId) public view returns (Phase memory phase) {
+        for (uint256 phaseIndex; phaseIndex < phases.length; phaseIndex++) {
+            if (phases[phaseIndex].id == phaseId) {
+                return phases[phaseIndex];
+            }
+        }
+    }
+
+    function getMeasureById(uint256 measureId) public view returns (Measure memory measure) {
+        for (uint256 measureIndex; measureIndex < measures.length; measureIndex++) {
+            if (measures[measureIndex].id == measureId) {
+                return measures[measureIndex];
+            }
+        }
+    }
+
+    function getMachineById(uint256 machineId) public view returns (Machine memory machine) {
         for (uint256 machineIndex; machineIndex < machines.length; machineIndex++) {
             if (machines[machineIndex].id == machineId) {
                 return machines[machineIndex];
@@ -229,6 +290,19 @@ contract ICESmartContract {
         return productCounter;
     }
 
+    function getProductsByCompanyId(uint256 companyId) public view returns (Product[] memory) {
+        uint256 numOfProducts = getNumOfProductsByCompanyId(companyId);
+        Product[] memory productTemp = new Product[](numOfProducts);
+        uint256 productCounter = 0;
+        for (uint256 productIndex = 0; productIndex < products.length; productIndex++) {
+            if (products[productIndex].companyId == companyId) {
+                productTemp[productCounter] = products[productIndex];
+                productCounter += 1;
+            }
+        }
+        return productTemp;
+    }
+
     function getNumOfProductsByRecipeId(uint256 recipeId)
         private
         view
@@ -241,19 +315,6 @@ contract ICESmartContract {
             }
         }
         return productCounter;
-    }
-
-    function getProductsByCompanyId(uint256 companyId) public view returns (Product[] memory) {
-        uint256 numOfProducts = getNumOfProductsByCompanyId(companyId);
-        Product[] memory productTemp = new Product[](numOfProducts);
-        uint256 productCounter = 0;
-        for (uint256 productIndex = 0; productIndex < products.length; productIndex++) {
-            if (products[productIndex].companyId == companyId) {
-                productTemp[productCounter] = products[productIndex];
-                productCounter += 1;
-            }
-        }
-        return productTemp;
     }
 
     function getProductsByRecipyId(uint256 recipeId) public view returns (Product[] memory) {
@@ -573,11 +634,47 @@ contract ICESmartContract {
         return measureTemp;
     }
 
-    function getCompanies() private view returns (Company[] memory) {
-        return companies;
-    }
+    // function getMachinesByListOfPhase(Phase[] memory phasesUsed)
+    //     public
+    //     view
+    //     returns (Machine[] memory)
+    // {
+    //     Machine[] memory machinesUsed = new Machine[](phasesUsed.length);
+    //     for (uint256 phaseIndex; phaseIndex < phasesUsed.length; phaseIndex++) {
+    //         uint256 machineId = phasesUsed[phaseIndex].machineId;
+    //         machinesUsed[phaseIndex] = getMachineById(machineId);
+    //     }
+    //     return machinesUsed;
+    // }
 
-    function getProducts() private view returns (Product[] memory) {
-        return products;
-    }
+    // function getRecipeStepsByListOfPhase(Phase[] memory phasesUsed)
+    //     public
+    //     view
+    //     returns (RecipeStep[] memory)
+    // {
+    //     RecipeStep[] memory recipeStepsInPhases = new RecipeStep[](phasesUsed.length);
+    //     for (uint256 phaseIndex; phaseIndex < phasesUsed.length; phaseIndex++) {
+    //         uint256 recipeStepId = phasesUsed[phaseIndex].recipeStepId;
+    //         recipeStepsInPhases[phaseIndex] = getRecipeStepbyId(recipeStepId);
+    //     }
+    //     return recipeStepsInPhases;
+    // }
+
+    // function getAllMeasuresByListOfPhase(Phase[] memory phasesUsed) private view returns (mapping(uint256 => Measure[]) storage){
+    //     mapping(uint256 => Measure[]) storage prova; 
+    // }
+
+    // function getProductInformationById(uint256 productId)
+    //     public
+    //     view
+    //     returns (ProductInformation memory)
+    // {
+    //     Product memory product = getProductById(productId);
+    //     Company memory company = getCompanyById(product.companyId);
+    //     Phase[] memory phases = getPhasesByProductId(productId);
+    //     Machine[] memory machines = getMachinesByListOfPhase(phases);
+    //     Recipe memory recipe = getRecipesbyId(product.recipeId);
+    //     RecipeStep[] memory recipeSteps = getRecipeStepsByListOfPhase(phases);
+
+    // }
 }
