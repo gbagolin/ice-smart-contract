@@ -3,7 +3,7 @@
     "overrides": [{
         "files": "*",
         "options": {
-            "printWidth": 100
+            "printWidth": 80
         }
     }]
 }
