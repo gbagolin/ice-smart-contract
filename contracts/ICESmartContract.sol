@@ -236,7 +236,7 @@ contract ICESmartContract {
         }
     }
 
-    function getRecipesbyId(uint256 recipeId)
+    function getRecipebyId(uint256 recipeId)
         public
         view
         returns (Recipe memory recipe)
