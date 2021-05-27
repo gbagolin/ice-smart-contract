@@ -1,5 +1,6 @@
 //SPDX-License-Identifier: LGPL-3.0-or-later
 pragma solidity ^0.8.1;
+pragma experimental ABIEncoderV2;
 
 contract ICESmartContract {
     struct Company {
@@ -126,7 +127,15 @@ contract ICESmartContract {
         string memory name,
         string memory description
     ) public returns (uint256 recipeStepId) {
-        recipeSteps.push(RecipeStep(recipeStepIdCounter, name, description, recipeId, machineId));
+        recipeSteps.push(
+            RecipeStep(
+                recipeStepIdCounter,
+                name,
+                description,
+                recipeId,
+                machineId
+            )
+        );
         recipeStepIdCounter += 1;
         return recipeStepIdCounter - 1;
     }
@@ -160,7 +169,9 @@ contract ICESmartContract {
         string memory name,
         string memory description
     ) public returns (uint256 productId) {
-        products.push(Product(productIdCounter, name, description, companyId, recipyId));
+        products.push(
+            Product(productIdCounter, name, description, companyId, recipyId)
+        );
         productIdCounter += 1;
         return productIdCounter - 1;
     }
@@ -172,7 +183,16 @@ contract ICESmartContract {
         string memory name,
         string memory description
     ) public returns (uint256 phaseId) {
-        phases.push(Phase(phaseIdCounter, name, description, productId, machineId, recipeStepId));
+        phases.push(
+            Phase(
+                phaseIdCounter,
+                name,
+                description,
+                productId,
+                machineId,
+                recipeStepId
+            )
+        );
         phaseIdCounter += 1;
         return phaseIdCounter - 1;
     }
@@ -200,15 +220,27 @@ contract ICESmartContract {
         return measureIdCounter - 1;
     }
 
-    function getCompanyById(uint256 companyId) public view returns (Company memory company) {
-        for (uint256 companyIndex; companyIndex < companies.length; companyIndex++) {
+    function getCompanyById(uint256 companyId)
+        public
+        view
+        returns (Company memory company)
+    {
+        for (
+            uint256 companyIndex;
+            companyIndex < companies.length;
+            companyIndex++
+        ) {
             if (companies[companyIndex].id == companyId) {
                 return companies[companyIndex];
             }
         }
     }
 
-    function getRecipesbyId(uint256 recipeId) public view returns (Recipe memory recipe) {
+    function getRecipesbyId(uint256 recipeId)
+        public
+        view
+        returns (Recipe memory recipe)
+    {
         for (uint256 recipeIndex; recipeIndex < recipes.length; recipeIndex++) {
             if (recipes[recipeIndex].id == recipeId) {
                 return recipes[recipeIndex];
@@ -221,7 +253,11 @@ contract ICESmartContract {
         view
         returns (RecipeStep memory recipeStep)
     {
-        for (uint256 recipeStepIndex; recipeStepIndex < recipeSteps.length; recipeStepIndex++) {
+        for (
+            uint256 recipeStepIndex;
+            recipeStepIndex < recipeSteps.length;
+            recipeStepIndex++
+        ) {
             if (recipeSteps[recipeStepIndex].id == recipeStepId) {
                 return recipeSteps[recipeStepIndex];
             }
@@ -238,21 +274,36 @@ contract ICESmartContract {
             measureConstraintIndex < measureConstraints.length;
             measureConstraintIndex++
         ) {
-            if (measureConstraints[measureConstraintIndex].id == measureConstraintId) {
+            if (
+                measureConstraints[measureConstraintIndex].id ==
+                measureConstraintId
+            ) {
                 return measureConstraints[measureConstraintIndex];
             }
         }
     }
 
-    function getProductById(uint256 productId) public view returns (Product memory product) {
-        for (uint256 productIndex; productIndex < products.length; productIndex++) {
+    function getProductById(uint256 productId)
+        public
+        view
+        returns (Product memory product)
+    {
+        for (
+            uint256 productIndex;
+            productIndex < products.length;
+            productIndex++
+        ) {
             if (products[productIndex].id == productId) {
                 return products[productIndex];
             }
         }
     }
 
-    function getPhaseById(uint256 phaseId) public view returns (Phase memory phase) {
+    function getPhaseById(uint256 phaseId)
+        public
+        view
+        returns (Phase memory phase)
+    {
         for (uint256 phaseIndex; phaseIndex < phases.length; phaseIndex++) {
             if (phases[phaseIndex].id == phaseId) {
                 return phases[phaseIndex];
@@ -260,16 +311,32 @@ contract ICESmartContract {
         }
     }
 
-    function getMeasureById(uint256 measureId) public view returns (Measure memory measure) {
-        for (uint256 measureIndex; measureIndex < measures.length; measureIndex++) {
+    function getMeasureById(uint256 measureId)
+        public
+        view
+        returns (Measure memory measure)
+    {
+        for (
+            uint256 measureIndex;
+            measureIndex < measures.length;
+            measureIndex++
+        ) {
             if (measures[measureIndex].id == measureId) {
                 return measures[measureIndex];
             }
         }
     }
 
-    function getMachineById(uint256 machineId) public view returns (Machine memory machine) {
-        for (uint256 machineIndex; machineIndex < machines.length; machineIndex++) {
+    function getMachineById(uint256 machineId)
+        public
+        view
+        returns (Machine memory machine)
+    {
+        for (
+            uint256 machineIndex;
+            machineIndex < machines.length;
+            machineIndex++
+        ) {
             if (machines[machineIndex].id == machineId) {
                 return machines[machineIndex];
             }
@@ -282,7 +349,11 @@ contract ICESmartContract {
         returns (uint256 numOfProducts)
     {
         uint256 productCounter = 0;
-        for (uint256 productIndex = 0; productIndex < products.length; productIndex++) {
+        for (
+            uint256 productIndex = 0;
+            productIndex < products.length;
+            productIndex++
+        ) {
             if (products[productIndex].companyId == companyId) {
                 productCounter += 1;
             }
@@ -290,11 +361,19 @@ contract ICESmartContract {
         return productCounter;
     }
 
-    function getProductsByCompanyId(uint256 companyId) public view returns (Product[] memory) {
+    function getProductsByCompanyId(uint256 companyId)
+        public
+        view
+        returns (Product[] memory)
+    {
         uint256 numOfProducts = getNumOfProductsByCompanyId(companyId);
         Product[] memory productTemp = new Product[](numOfProducts);
         uint256 productCounter = 0;
-        for (uint256 productIndex = 0; productIndex < products.length; productIndex++) {
+        for (
+            uint256 productIndex = 0;
+            productIndex < products.length;
+            productIndex++
+        ) {
             if (products[productIndex].companyId == companyId) {
                 productTemp[productCounter] = products[productIndex];
                 productCounter += 1;
@@ -309,7 +388,11 @@ contract ICESmartContract {
         returns (uint256 numOfProducts)
     {
         uint256 productCounter = 0;
-        for (uint256 productIndex = 0; productIndex < products.length; productIndex++) {
+        for (
+            uint256 productIndex = 0;
+            productIndex < products.length;
+            productIndex++
+        ) {
             if (products[productIndex].recipeId == recipeId) {
                 productCounter += 1;
             }
@@ -317,11 +400,19 @@ contract ICESmartContract {
         return productCounter;
     }
 
-    function getProductsByRecipyId(uint256 recipeId) public view returns (Product[] memory) {
+    function getProductsByRecipyId(uint256 recipeId)
+        public
+        view
+        returns (Product[] memory)
+    {
         uint256 numOfProducts = getNumOfProductsByRecipeId(recipeId);
         Product[] memory productTemp = new Product[](numOfProducts);
         uint256 productCounter = 0;
-        for (uint256 productIndex = 0; productIndex < products.length; productIndex++) {
+        for (
+            uint256 productIndex = 0;
+            productIndex < products.length;
+            productIndex++
+        ) {
             if (products[productIndex].recipeId == recipeId) {
                 productTemp[productCounter] = products[productIndex];
                 productCounter += 1;
@@ -337,7 +428,11 @@ contract ICESmartContract {
     {
         uint256 machineCounter = 0;
 
-        for (uint256 machineIndex = 0; machineIndex < machines.length; machineIndex++) {
+        for (
+            uint256 machineIndex = 0;
+            machineIndex < machines.length;
+            machineIndex++
+        ) {
             if (machines[machineIndex].companyId == companyId) {
                 machineCounter += 1;
             }
@@ -345,11 +440,19 @@ contract ICESmartContract {
         return machineCounter;
     }
 
-    function getMachinesByCompanyId(uint256 companyId) public view returns (Machine[] memory) {
+    function getMachinesByCompanyId(uint256 companyId)
+        public
+        view
+        returns (Machine[] memory)
+    {
         uint256 numOfMachine = getNumOfMachinesByCompanyId(companyId);
         Machine[] memory machineTemp = new Machine[](numOfMachine);
         uint256 machineCounter = 0;
-        for (uint256 machineIndex = 0; machineIndex < machines.length; machineIndex++) {
+        for (
+            uint256 machineIndex = 0;
+            machineIndex < machines.length;
+            machineIndex++
+        ) {
             if (machines[machineIndex].companyId == companyId) {
                 machineTemp[machineCounter] = machines[machineIndex];
                 machineCounter += 1;
@@ -365,7 +468,11 @@ contract ICESmartContract {
     {
         uint256 counter = 0;
 
-        for (uint256 recipesIndex = 0; recipesIndex < recipes.length; recipesIndex++) {
+        for (
+            uint256 recipesIndex = 0;
+            recipesIndex < recipes.length;
+            recipesIndex++
+        ) {
             if (recipes[recipesIndex].companyId == companyId) {
                 counter += 1;
             }
@@ -373,11 +480,19 @@ contract ICESmartContract {
         return counter;
     }
 
-    function getRecipesByCompanyId(uint256 companyId) public view returns (Recipe[] memory) {
+    function getRecipesByCompanyId(uint256 companyId)
+        public
+        view
+        returns (Recipe[] memory)
+    {
         uint256 numOfRecepies = getNumOfRecipesByCompanyId(companyId);
         Recipe[] memory recipeTemp = new Recipe[](numOfRecepies);
         uint256 recipeCounter = 0;
-        for (uint256 recipeIndex = 0; recipeIndex < recipes.length; recipeIndex++) {
+        for (
+            uint256 recipeIndex = 0;
+            recipeIndex < recipes.length;
+            recipeIndex++
+        ) {
             if (recipes[recipeIndex].companyId == companyId) {
                 recipeTemp[recipeCounter] = recipes[recipeIndex];
                 recipeCounter += 1;
@@ -393,7 +508,11 @@ contract ICESmartContract {
     {
         uint256 counter = 0;
 
-        for (uint256 recipeIndex = 0; recipeIndex < recipeSteps.length; recipeIndex++) {
+        for (
+            uint256 recipeIndex = 0;
+            recipeIndex < recipeSteps.length;
+            recipeIndex++
+        ) {
             if (recipeSteps[recipeIndex].recipeId == recipeId) {
                 counter += 1;
             }
@@ -401,11 +520,19 @@ contract ICESmartContract {
         return counter;
     }
 
-    function getRecipeStepsByRecipeId(uint256 recipeId) public view returns (RecipeStep[] memory) {
+    function getRecipeStepsByRecipeId(uint256 recipeId)
+        public
+        view
+        returns (RecipeStep[] memory)
+    {
         uint256 numOfRecipes = getNumOfRecipeStepsByRecipeId(recipeId);
         RecipeStep[] memory recipeTemp = new RecipeStep[](numOfRecipes);
         uint256 recipeCounter = 0;
-        for (uint256 recipeIndex = 0; recipeIndex < recipeSteps.length; recipeIndex++) {
+        for (
+            uint256 recipeIndex = 0;
+            recipeIndex < recipeSteps.length;
+            recipeIndex++
+        ) {
             if (recipeSteps[recipeIndex].recipeId == recipeId) {
                 recipeTemp[recipeCounter] = recipeSteps[recipeIndex];
                 recipeCounter += 1;
@@ -421,7 +548,11 @@ contract ICESmartContract {
     {
         uint256 counter = 0;
 
-        for (uint256 recipeIndex = 0; recipeIndex < recipeSteps.length; recipeIndex++) {
+        for (
+            uint256 recipeIndex = 0;
+            recipeIndex < recipeSteps.length;
+            recipeIndex++
+        ) {
             if (recipeSteps[recipeIndex].machineId == machineId) {
                 counter += 1;
             }
@@ -437,7 +568,11 @@ contract ICESmartContract {
         uint256 numOfRecipes = getNumOfRecipeStepsByMachineId(machineId);
         RecipeStep[] memory recipeTemp = new RecipeStep[](numOfRecipes);
         uint256 recipeCounter = 0;
-        for (uint256 recipeIndex = 0; recipeIndex < recipeSteps.length; recipeIndex++) {
+        for (
+            uint256 recipeIndex = 0;
+            recipeIndex < recipeSteps.length;
+            recipeIndex++
+        ) {
             if (recipeSteps[recipeIndex].machineId == machineId) {
                 recipeTemp[recipeCounter] = recipeSteps[recipeIndex];
                 recipeCounter += 1;
@@ -458,7 +593,10 @@ contract ICESmartContract {
             measureConstraintIndex < measureConstraints.length;
             measureConstraintIndex++
         ) {
-            if (measureConstraints[measureConstraintIndex].recipeStepId == recipeStepId) {
+            if (
+                measureConstraints[measureConstraintIndex].recipeStepId ==
+                recipeStepId
+            ) {
                 counter += 1;
             }
         }
@@ -470,7 +608,8 @@ contract ICESmartContract {
         view
         returns (MeasureConstraint[] memory)
     {
-        uint256 numOfMeasureConstraints = getNumOfMeasureConstraintByRecipeStepId(recipeStepId);
+        uint256 numOfMeasureConstraints =
+            getNumOfMeasureConstraintByRecipeStepId(recipeStepId);
         MeasureConstraint[] memory measureConstraintTemp =
             new MeasureConstraint[](numOfMeasureConstraints);
         uint256 measureConstraintCounter = 0;
@@ -479,10 +618,13 @@ contract ICESmartContract {
             measureConstraintIndex < measureConstraints.length;
             measureConstraintIndex++
         ) {
-            if (measureConstraints[measureConstraintIndex].recipeStepId == recipeStepId) {
-                measureConstraintTemp[measureConstraintCounter] = measureConstraints[
-                    measureConstraintIndex
-                ];
+            if (
+                measureConstraints[measureConstraintIndex].recipeStepId ==
+                recipeStepId
+            ) {
+                measureConstraintTemp[
+                    measureConstraintCounter
+                ] = measureConstraints[measureConstraintIndex];
                 measureConstraintCounter += 1;
             }
         }
@@ -504,7 +646,11 @@ contract ICESmartContract {
         return counter;
     }
 
-    function getPhasesByProductId(uint256 productId) public view returns (Phase[] memory) {
+    function getPhasesByProductId(uint256 productId)
+        public
+        view
+        returns (Phase[] memory)
+    {
         uint256 numOfPhases = getNumOfPhasesByProductId(productId);
         Phase[] memory phaseTemp = new Phase[](numOfPhases);
         uint256 phaseCounter = 0;
@@ -532,7 +678,11 @@ contract ICESmartContract {
         return counter;
     }
 
-    function getPhasesByMachineId(uint256 machineId) public view returns (Phase[] memory) {
+    function getPhasesByMachineId(uint256 machineId)
+        public
+        view
+        returns (Phase[] memory)
+    {
         uint256 numOfPhases = getNumOfPhasesByMachineId(machineId);
         Phase[] memory phaseTemp = new Phase[](numOfPhases);
         uint256 phaseCounter = 0;
@@ -560,7 +710,11 @@ contract ICESmartContract {
         return counter;
     }
 
-    function getPhasesByRecipeStepId(uint256 recipeStepId) public view returns (Phase[] memory) {
+    function getPhasesByRecipeStepId(uint256 recipeStepId)
+        public
+        view
+        returns (Phase[] memory)
+    {
         uint256 numOfPhases = getNumOfPhasesByRecipeStepId(recipeStepId);
         Phase[] memory phaseTemp = new Phase[](numOfPhases);
         uint256 phaseCounter = 0;
@@ -580,7 +734,11 @@ contract ICESmartContract {
     {
         uint256 counter = 0;
 
-        for (uint256 measureIndex = 0; measureIndex < measures.length; measureIndex++) {
+        for (
+            uint256 measureIndex = 0;
+            measureIndex < measures.length;
+            measureIndex++
+        ) {
             if (measures[measureIndex].phaseId == phaseId) {
                 counter += 1;
             }
@@ -588,11 +746,19 @@ contract ICESmartContract {
         return counter;
     }
 
-    function getMeasuresByPhaseId(uint256 phaseId) public view returns (Measure[] memory) {
+    function getMeasuresByPhaseId(uint256 phaseId)
+        public
+        view
+        returns (Measure[] memory)
+    {
         uint256 numOfMeasures = getNumOfMeasuresByPhaseId(phaseId);
         Measure[] memory measureTemp = new Measure[](numOfMeasures);
         uint256 measureCounter = 0;
-        for (uint256 measureIndex = 0; measureIndex < measures.length; measureIndex++) {
+        for (
+            uint256 measureIndex = 0;
+            measureIndex < measures.length;
+            measureIndex++
+        ) {
             if (measures[measureIndex].phaseId == phaseId) {
                 measureTemp[measureCounter] = measures[measureIndex];
                 measureCounter += 1;
@@ -601,15 +767,20 @@ contract ICESmartContract {
         return measureTemp;
     }
 
-    function getNumOfMeasureConstraintsByMeasureConstraintId(uint256 measureConstraintId)
-        public
-        view
-        returns (uint256 numOfMeasures)
-    {
+    function getNumOfMeasureConstraintsByMeasureConstraintId(
+        uint256 measureConstraintId
+    ) public view returns (uint256 numOfMeasures) {
         uint256 counter = 0;
 
-        for (uint256 measureIndex = 0; measureIndex < measures.length; measureIndex++) {
-            if (measures[measureIndex].measureConstraintId == measureConstraintId) {
+        for (
+            uint256 measureIndex = 0;
+            measureIndex < measures.length;
+            measureIndex++
+        ) {
+            if (
+                measures[measureIndex].measureConstraintId ==
+                measureConstraintId
+            ) {
                 counter += 1;
             }
         }
@@ -622,11 +793,20 @@ contract ICESmartContract {
         returns (Measure[] memory)
     {
         uint256 numOfMeasures =
-            getNumOfMeasureConstraintsByMeasureConstraintId(measureConstraintId);
+            getNumOfMeasureConstraintsByMeasureConstraintId(
+                measureConstraintId
+            );
         Measure[] memory measureTemp = new Measure[](numOfMeasures);
         uint256 measureCounter = 0;
-        for (uint256 measureIndex = 0; measureIndex < measures.length; measureIndex++) {
-            if (measures[measureIndex].measureConstraintId == measureConstraintId) {
+        for (
+            uint256 measureIndex = 0;
+            measureIndex < measures.length;
+            measureIndex++
+        ) {
+            if (
+                measures[measureIndex].measureConstraintId ==
+                measureConstraintId
+            ) {
                 measureTemp[measureCounter] = measures[measureIndex];
                 measureCounter += 1;
             }
@@ -661,7 +841,7 @@ contract ICESmartContract {
     // }
 
     // function getAllMeasuresByListOfPhase(Phase[] memory phasesUsed) private view returns (mapping(uint256 => Measure[]) storage){
-    //     mapping(uint256 => Measure[]) storage prova; 
+    //     mapping(uint256 => Measure[]) storage prova;
     // }
 
     // function getProductInformationById(uint256 productId)
