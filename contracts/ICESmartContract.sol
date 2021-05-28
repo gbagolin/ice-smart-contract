@@ -95,12 +95,19 @@ contract ICESmartContract {
     uint256 private phaseIdCounter;
     uint256 private measureIdCounter;
 
-    event CompanyCreated(uint256 id); 
+    event CompanyCreated(uint256 id);
+    event MachineCreated(uint256 id);
+    event RecipeCreated(uint256 id);
+    event RecipeStepCreated(uint256 id);
+    event MeasureConstraintCreated(uint256 id);
+    event ProductCreated(uint256 id);
+    event PhaseCreated(uint256 id);
+    event MeasureCreated(uint256 id);
 
     function addCompany(string memory name) public returns (uint256 companyId) {
         companies.push(Company(companyIdCounter, name));
+        uint256 id = companyIdCounter;
         companyIdCounter += 1;
-        uint256 id = companyIdCounter - 1; 
         emit CompanyCreated(id);
         return id;
     }
@@ -111,8 +118,10 @@ contract ICESmartContract {
         string memory description
     ) public returns (uint256 machineId) {
         machines.push(Machine(machineIdCounter, name, description, companyId));
+        uint256 id = machineIdCounter;
         machineIdCounter += 1;
-        return machineIdCounter - 1;
+        emit MachineCreated(id);
+        return id;
     }
 
     function addRecipe(
@@ -121,8 +130,10 @@ contract ICESmartContract {
         string memory description
     ) public returns (uint256 recipeId) {
         recipes.push(Recipe(recipeIdCounter, name, description, companyId));
+        uint256 id = recipeIdCounter;
         recipeIdCounter += 1;
-        return recipeIdCounter - 1;
+        emit RecipeCreated(id);
+        return id;
     }
 
     function addRecipeStep(
@@ -140,8 +151,10 @@ contract ICESmartContract {
                 machineId
             )
         );
+        uint256 id = recipeStepIdCounter;
+        emit RecipeStepCreated(id);
         recipeStepIdCounter += 1;
-        return recipeStepIdCounter - 1;
+        return id;
     }
 
     function addMeasureConstraint(
@@ -163,8 +176,10 @@ contract ICESmartContract {
                 machineId
             )
         );
+        uint256 id = measureConstraintIdCounter;
         measureConstraintIdCounter += 1;
-        return measureConstraintIdCounter - 1;
+        emit MeasureConstraintCreated(id);
+        return id;
     }
 
     function addProduct(
@@ -176,8 +191,10 @@ contract ICESmartContract {
         products.push(
             Product(productIdCounter, name, description, companyId, recipyId)
         );
+        uint256 id = productIdCounter;
+        emit ProductCreated(id);
         productIdCounter += 1;
-        return productIdCounter - 1;
+        return id;
     }
 
     function addPhase(
@@ -197,8 +214,10 @@ contract ICESmartContract {
                 recipeStepId
             )
         );
+        uint256 id = phaseIdCounter;
+        emit PhaseCreated(id);
         phaseIdCounter += 1;
-        return phaseIdCounter - 1;
+        return id;
     }
 
     function addMeasure(
@@ -220,8 +239,10 @@ contract ICESmartContract {
                 measureConstraintId
             )
         );
+        uint256 id = measureIdCounter;
+        emit MeasureCreated(id);
         measureIdCounter += 1;
-        return measureIdCounter - 1;
+        return id;
     }
 
     function getCompanyById(uint256 companyId)
