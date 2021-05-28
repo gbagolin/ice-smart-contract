@@ -95,10 +95,14 @@ contract ICESmartContract {
     uint256 private phaseIdCounter;
     uint256 private measureIdCounter;
 
+    event CompanyCreated(uint256 id); 
+
     function addCompany(string memory name) public returns (uint256 companyId) {
         companies.push(Company(companyIdCounter, name));
         companyIdCounter += 1;
-        return companyIdCounter - 1;
+        uint256 id = companyIdCounter - 1; 
+        emit CompanyCreated(id);
+        return id;
     }
 
     function addMachine(
@@ -812,6 +816,14 @@ contract ICESmartContract {
             }
         }
         return measureTemp;
+    }
+
+    function getMeasureConstraints()
+        public
+        view
+        returns (MeasureConstraint[] memory)
+    {
+        return measureConstraints;
     }
 
     // function getMachinesByListOfPhase(Phase[] memory phasesUsed)
