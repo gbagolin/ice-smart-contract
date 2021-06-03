@@ -60,6 +60,7 @@ contract ICESmartContract {
     struct Measure {
         uint256 id;
         string name;
+        uint256 measure;
         string unitOfMeasure;
         uint256 measureStartTime;
         uint256 measureEndTime;
@@ -224,6 +225,7 @@ contract ICESmartContract {
         uint256 phaseId,
         uint256 measureConstraintId,
         string memory name,
+        uint256 measure, 
         string memory unitOfMeasure,
         uint256 measureStartTime,
         uint256 measureEndTime
@@ -232,6 +234,7 @@ contract ICESmartContract {
             Measure(
                 measureIdCounter,
                 name,
+                measure, 
                 unitOfMeasure,
                 measureStartTime,
                 measureEndTime,

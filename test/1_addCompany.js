@@ -34,6 +34,7 @@ contract("Test company", () => {
     assert.equal(company.name, "azienda di luca", "names not equal");
 
     secondCompanyId = companyId;
+    console.log("company id: ", firstCompanyId, secondCompanyId)
   });
 
 });
