@@ -3,6 +3,10 @@ pragma solidity ^0.8.1;
 pragma experimental ABIEncoderV2;
 
 contract ICESmartContract {
+
+    enum USER_TYPE {NORMAL_USER, ADMIN, DATA_PROVIDER, OWNER}
+
+
     struct Company {
         uint256 id;
         string name;
@@ -68,15 +72,6 @@ contract ICESmartContract {
         uint256 measureConstraintId;
     }
 
-    // struct ProductInformation {
-    //     Product product;
-    //     Company company;
-    //     Phase[] phases;
-    //     Machine[] machinesUsed;
-    //     Recipe recipeUsed;
-    //     RecipeStep[] recipeSteps;
-    //     Measure[] allMeasures;
-    // }
 
     Company[] public companies;
     Machine[] public machines;
@@ -96,6 +91,10 @@ contract ICESmartContract {
     uint256 private phaseIdCounter;
     uint256 private measureIdCounter;
 
+    address private owner; 
+
+    mapping (address => USER_TYPE) private userMap;
+
     event CompanyCreated(uint256 id);
     event MachineCreated(uint256 id);
     event RecipeCreated(uint256 id);
@@ -105,7 +104,27 @@ contract ICESmartContract {
     event PhaseCreated(uint256 id);
     event MeasureCreated(uint256 id);
 
+    constructor(){
+        owner = msg.sender; 
+        userMap[owner] = USER_TYPE.OWNER; 
+    }
+
+    function addAdmin(address admin) public {
+        require(msg.sender == owner);
+        userMap[admin] = USER_TYPE.ADMIN; 
+    }
+
+    function addDataProvider(address dataProviderUser) public {
+        require(userMap[msg.sender] == USER_TYPE.ADMIN);
+        userMap[dataProviderUser] = USER_TYPE.DATA_PROVIDER; 
+    }
+
+    function getUserType() public view returns(USER_TYPE userType){
+        return userMap[msg.sender]; 
+    }
+
     function addCompany(string memory name) public returns (uint256 companyId) {
+        require(userMap[msg.sender] == USER_TYPE.ADMIN);
         companies.push(Company(companyIdCounter, name));
         uint256 id = companyIdCounter;
         companyIdCounter += 1;
@@ -118,6 +137,7 @@ contract ICESmartContract {
         string memory name,
         string memory description
     ) public returns (uint256 machineId) {
+        require(userMap[msg.sender] == USER_TYPE.ADMIN);
         machines.push(Machine(machineIdCounter, name, description, companyId));
         uint256 id = machineIdCounter;
         machineIdCounter += 1;
@@ -130,6 +150,7 @@ contract ICESmartContract {
         string memory name,
         string memory description
     ) public returns (uint256 recipeId) {
+        require(userMap[msg.sender] == USER_TYPE.ADMIN);
         recipes.push(Recipe(recipeIdCounter, name, description, companyId));
         uint256 id = recipeIdCounter;
         recipeIdCounter += 1;
@@ -143,6 +164,7 @@ contract ICESmartContract {
         string memory name,
         string memory description
     ) public returns (uint256 recipeStepId) {
+        require(userMap[msg.sender] == USER_TYPE.ADMIN);
         recipeSteps.push(
             RecipeStep(
                 recipeStepIdCounter,
@@ -166,6 +188,7 @@ contract ICESmartContract {
         int256 minMeasure,
         string memory unitOfMeasure
     ) public returns (uint256 measureId) {
+        require(userMap[msg.sender] == USER_TYPE.ADMIN);
         measureConstraints.push(
             MeasureConstraint(
                 measureConstraintIdCounter,
@@ -189,6 +212,7 @@ contract ICESmartContract {
         string memory name,
         string memory description
     ) public returns (uint256 productId) {
+        require(userMap[msg.sender] == USER_TYPE.ADMIN);
         products.push(
             Product(productIdCounter, name, description, companyId, recipyId)
         );
@@ -205,6 +229,7 @@ contract ICESmartContract {
         string memory name,
         string memory description
     ) public returns (uint256 phaseId) {
+        require(userMap[msg.sender] == USER_TYPE.DATA_PROVIDER || userMap[msg.sender] == USER_TYPE.ADMIN );
         phases.push(
             Phase(
                 phaseIdCounter,
@@ -230,6 +255,7 @@ contract ICESmartContract {
         uint256 measureStartTime,
         uint256 measureEndTime
     ) public returns (uint256 measureId) {
+        require(userMap[msg.sender] == USER_TYPE.DATA_PROVIDER || userMap[msg.sender] == USER_TYPE.ADMIN );
         measures.push(
             Measure(
                 measureIdCounter,
